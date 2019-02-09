@@ -3,7 +3,7 @@ package com.rafael.pessoa.githubaac.data.local.converter
 import android.arch.persistence.room.TypeConverter
 import java.util.*
 
-object DataConverter{
+object DateConverter{
 
     @TypeConverter @JvmStatic
     fun toDate(timeStamp: Long?): Date? {
