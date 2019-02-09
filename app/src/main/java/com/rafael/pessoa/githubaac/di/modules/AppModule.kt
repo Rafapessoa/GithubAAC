@@ -12,16 +12,18 @@ import com.rafael.pessoa.githubaac.data.remote.UserWebService
 import com.rafael.pessoa.githubaac.data.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import javax.inject.Singleton
+import com.facebook.stetho.okhttp3.StethoInterceptor
 
-@Module
+
+
+@Module(includes = [ViewModelModule::class])
 class AppModule{
-
-
     @Provides
 @Singleton
 fun provideDatabase(application : Application): MeuBancoDeDados{
@@ -31,6 +33,14 @@ fun provideDatabase(application : Application): MeuBancoDeDados{
                 "meuqueridobanco.db"
         ).build()
     }
+
+    @Provides
+    @Singleton
+    fun provideExecutor(): Executor{
+        return Executors.newSingleThreadExecutor()
+    }
+
+
 
     @Provides
     @Singleton
@@ -48,10 +58,20 @@ fun provideDatabase(application : Application): MeuBancoDeDados{
 
     @Provides
     @Singleton
-    fun provideRetrofit(gson: Gson): Retrofit {
+    fun provideOkhttp() : OkHttpClient {
+        return OkHttpClient.Builder()
+                .addNetworkInterceptor(StethoInterceptor())
+                .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(gson: Gson,
+                        okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl("http://api.github.com")
+                .client(okHttpClient)
                 .build()
 
     }

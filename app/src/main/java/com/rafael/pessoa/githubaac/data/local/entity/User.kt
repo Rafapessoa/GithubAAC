@@ -8,11 +8,11 @@ import java.util.*
 @Entity
 data class User(
         @PrimaryKey
-        var id: Int = 0,
-        var name: String = "",
+        var id: Int? = 0,
+        var name: String? = "",
         @SerializedName("avatar_url")
-        var avatarURL: String = "",
-        var login: String = "",
+        var avatarURL: String? = "",
+        var login: String? = "",
         var lastRefresh: Date?
 
 
